@@ -49,7 +49,7 @@ type Entry struct {
 	Logger *log.Logger
 
 	// Contains all the fields set by the user.
-	Date Fields
+	Data Fields
 
 	// Time at which the log entry was created
 	Time time.Time
