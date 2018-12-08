@@ -24,6 +24,11 @@ func main() {
 	}
 
 	var out bytes.Buffer
-	json.Indent(&out, b, "=", "\t")
+	json.Indent(&out, b, "", "\t")
 	out.WriteTo(os.Stdout)
 }
+
+
+// func Indent(dst *bytes.Buffer, src []byte, prefix, indent string) error
+
+//

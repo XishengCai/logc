@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/afex/hystrix-go/plugins"
 )
 
 type fieldKey string
@@ -98,9 +97,11 @@ func(f *JSONFormatter) Format(entry *Entry) ([]byte, error){
 	if f.PrettyPrint {
 		encoder.SetIndent("", " ")
 	}
+	if err := encoder.Encode(data); err != nil {
+		return nil,  fmt.Errorf("Failed to marshal fields to JSON, %v", err)
+	}
 
-
-
+	return b.Bytes(), nil
 
 }
 
