@@ -3,6 +3,7 @@ package pkg
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -82,6 +83,33 @@ func (f *TextFormatter) init(entry *Entry) {
 
 	}
 }
+
+func (f *TextFormatter) init(entry *Entry) {
+	if entry.Logger != nil {
+		f.isTerminal = checkIfTerminal(entry.Logger.Out)
+
+		if f.isTerminal {
+			initTerminal(entry.Logger.Out)
+		}
+	}
+}
+
+func (f *TextFormatter) isColored() bool {
+	isColored := f.ForceColors || f.isTerminal
+
+	if f.EnvironmentOverrideColors {
+		if force, ok := os.LookupEnv("CLICOLOR_FORCE"); ok && force != "0" {
+			isColored = true
+		} else if ok && force == "0" {
+			isColored = false
+		} else if os.Getenv("CLICOLOR") == "0" {
+			isColored = false
+		}
+	}
+
+	return isColored && !f.DisableColors
+}
+
 
 func (f *TextFormatter) printColored(b *bytes.Buffer, entry *Entry, keys []string, data Fields, timeoutFormat string) {
 	var levelColor int
